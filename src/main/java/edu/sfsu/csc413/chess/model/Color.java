@@ -16,7 +16,8 @@ public enum Color {
 
     /** The side whose turn it is after this one moves. */
     public Color opposite() {
-        throw new UnsupportedOperationException("M0b: your turn");
+        return this == WHITE ? BLACK : WHITE;
+        // if the white pieces go first, black ones go second, & the turns keep switching
     }
 
     /**
@@ -24,16 +25,25 @@ public enum Color {
      * White moves up the board (+1), black moves down (-1).
      */
     public int pawnDirection() {
-        throw new UnsupportedOperationException("M0b: your turn");
+        return this == WHITE ? 1 : -1;
+        // white pieces go first, they're moving up the chess board
+        // black pieces go second, they move down the board
     }
 
     /** The rank pawns of this color start on (0-based). */
     public int pawnStartRank() {
-        throw new UnsupportedOperationException("M0b: your turn");
+        return this == WHITE ? 1 : Position.BOARD_SIZE - 2;
+        // pawns can move either 1 or 2 spaces when they're at their starting positon on the board
     }
 
     /** The rank a pawn of this color must reach to promote (0-based). */
     public int promotionRank() {
-        throw new UnsupportedOperationException("M0b: your turn");
+        return this == WHITE ? Position.BOARD_SIZE - 1: 0;
+        /*
+        the board is 8 x 8 starting at index 0, so when a white pawn reaches the
+        top of the board (index 7) or when a black pawn reaches the bottom (index 0).
+        it can be promoted to a different piece (in most instances it's a queen, rook,
+        bishop or knight)
+        */
     }
 }
