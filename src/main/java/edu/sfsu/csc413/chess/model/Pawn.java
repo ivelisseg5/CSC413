@@ -2,6 +2,7 @@ package edu.sfsu.csc413.chess.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The pawn — the piece that breaks every rule the others follow.
@@ -31,7 +32,52 @@ public class Pawn extends Piece {
 
     @Override
     public List<Move> pseudoLegalMoves(Board board, Position from) {
-        throw new UnsupportedOperationException("M2: implement Pawn.pseudoLegalMoves");
+        /*
+            firstly, initialize an array list that returns all the moves a pawn can
+            make from its current position
+         */
+        List<Move> moves = new ArrayList<>();
+        int forward = color() == Color.WHITE ? 1 : -1;
+        int startRank = color() == Color.WHITE ? 1 : 6;
+        int promotionRank = color() == Color.WHITE ? 7 : 0;
+
+        /*
+            pawns have the option to either move one or two squares forward
+            at the very start of a chess game when they're at their starting
+            position, first check to see if the empty space exists in front
+            of the pawn so it can move forward
+         */
+        Position oneStep = from.offsetOrNull(0, forward);
+        if(oneStep != null && board.pieceAt(oneStep) == null){
+            addArrivals(moves, from, oneStep, null, promotionRank);
+
+            if(from.rank() == startRank){
+                Position twoForward = from.offsetOrNull(0, 2 * forward);
+                if(twoForward != null && board.pieceAt(twoForward) == null){
+                    moves.add(Move.quiet(from,twoForward, this));
+                }
+            }
+        }
+
+        /*
+            pawns can attack diagonally, -1 and 1 are the diagonal spaces on the
+            board. the for loop checks to see if there are any pieces diagonal to
+            the pawn that the pawn can attack. if the pawn can attack diagonally, it
+            takes over the last piece that was there. unless it was null, it can only
+            move forward
+         */
+        for(int fileDelta : new int[] {-1, 1}){
+            Position diagonal = from.offsetOrNull(fileDelta, forward);
+            if(diagonal == null){
+                continue;
+            }
+            Piece occupant = board.pieceAt(diagonal);
+            if(occupant != null && occupant.color() != color()){
+                addArrivals(moves, from, diagonal, occupant, promotionRank);
+            }
+        }
+
+        return moves;
     }
 
     /**
@@ -47,6 +93,25 @@ public class Pawn extends Piece {
      */
     @Override
     public boolean attacks(Board board, Position from, Position target) {
-        throw new UnsupportedOperationException("M2: implement Pawn.attacks");
+        int forward = color() == Color.WHITE ? 1 : -1;
+        return Objects.equals(target, from.offsetOrNull(-1, forward))
+                || Objects.equals(target, from.offsetOrNull(1, forward));
+    }
+
+    /*
+        this is a helper method to add moves, based on whether the move reaches the
+        promotion rank is a regular move or an attack. when a pawn reaches the end of
+        the board it has the option to become either a queen, rook, bishop or knight
+     */
+    private void addArrivals(List<Move> moves, Position from, Position to, Piece captured, int lastRank){
+         if(to.rank() == lastRank){
+             for(PieceType promotesTo : PROMOTION_CHOICES){
+                 moves.add(Move.promotion(from, to, this, captured, promotesTo));
+             }
+         }else if (captured == null){
+             moves.add(Move.quiet(from, to, this));
+         }else{
+             moves.add(Move.capture(from, to, this, captured));
+         }
     }
 }
