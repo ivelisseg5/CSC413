@@ -51,6 +51,27 @@ public class Board {
     }
 
     /*
+        firstly, we're using the move.from() function to remove the piece from its
+        original position on the board, leaving that square empty. the ternary operator
+        checks if we can promote after moving our piece.
+     */
+    public void apply(Move move){
+        place(move.from(), null);
+
+        Piece arriving = move.isPromotion()
+                ? promote(move.promotesTo(),
+                move.moved().color()) : move.moved();
+
+        place(move.to(), arriving);
+    }
+
+    // moves a piece back to its original spot
+    public void undo(Move move){
+        place(move.from(), move.moved());
+        place(move.to(), move.captured());
+    }
+
+    /*
     overriding toString using a StringBuilder is more efficient than simply concatenating
     everything together.
      */
@@ -84,5 +105,23 @@ public class Board {
             }
         }
         return fen.toString();
+    }
+
+    /*
+        i decided to just copy & paste the 4 lines from PieceFactory because it's just easier in my opinion.
+        also if we had called PieceFactory.create directly, it would make this part of the function
+        dependent on PieceFactory. if we called PieceFactory.create directly then made changes to
+        PieceFactory we could run the risk of breaking this helper function because it's not operating
+        independently as its own function since it calls another one. (i hope i explained this well)
+     */
+
+    private Piece promote(PieceType type, Color color){
+        return switch (type){
+            case QUEEN -> new Queen(color);
+            case ROOK -> new Rook(color);
+            case BISHOP -> new Bishop(color);
+            case KNIGHT -> new Knight(color);
+            default -> throw new IllegalArgumentException("cannot promote to: " + type);
+        };
     }
 }
