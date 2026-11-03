@@ -31,6 +31,16 @@ public class Board {
         squares[position.file()][position.rank()] = piece;
     }
 
+    // find where the king is on the board then return its position, otherwise return null
+    public Position kingPosition(Color color){
+        for(Position position : positionsOf(color)){
+            if(pieceAt(position).type() == PieceType.KING){
+                return position;
+            }
+        }
+        return null;
+    }
+
     /*
     every single piece on the board has a color its assigned to, the point of this
     for loop is to identify which squares are holding either white chess pieces, or black

@@ -16,7 +16,10 @@ public class Knight extends Piece {
     /**
      * The eight L-shapes, as {file, rank} deltas.
      */
-    private static final int[][] OFFSETS = { { 1, 2 }, { 2, 1 }, { 2, -1 }, { 1, -2 }, { -1, -2 }, { -2, -1 }, { -2, 1 }, { -1, 2 } };
+    private static final int[][] OFFSETS = {
+            { 1, 2 }, { 2, 1 }, { 2, -1 }, { 1, -2 },
+            { -1, -2 }, { -2, -1 }, { -2, 1 }, { -1, 2 }
+    };
 
     public Knight(Color color) {
         super(color, PieceType.KNIGHT);

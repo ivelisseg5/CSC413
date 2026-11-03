@@ -41,7 +41,36 @@ public final class MoveGenerator {
      * when it tightens.
      */
     public static List<Move> legalMoves(Board board, Color color) {
-        return pseudoLegalMoves(board,color);
+        List<Move> legal = new ArrayList<>();
+
+        for(Move candidate : pseudoLegalMoves(board, color)){
+            board.apply(candidate);
+            boolean findKing = isInCheck(board, color);
+            board.undo(candidate);
+
+            if(!findKing){
+                legal.add(candidate);
+            }
+        }
+
+        return legal;
+    }
+
+    public static boolean isInCheck(Board board, Color color){
+        Position king = board.kingPosition(color);
+        if(king == null){
+            return false;
+        }
+        return isAttacked(board, king, color.opposite());
+    }
+
+    public static boolean isAttacked(Board board, Position target, Color attacker){
+        for(Position from : board.positionsOf(attacker)){
+            if(board.pieceAt(from).attacks(board, from, target)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
