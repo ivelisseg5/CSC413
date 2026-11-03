@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
     direction TB
     
@@ -49,3 +50,4 @@ classDiagram
     MoveGenerator ..> Move : generator + filter
     MoveGenerator ..> Position : finds the king
     MoveGenerator ..> Color : side and opponent
+```

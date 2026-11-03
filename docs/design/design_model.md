@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
     direction TB
 
@@ -134,3 +135,4 @@ classDiagram
 
     note for Piece "Each implements pseudoLegalMoves; Pawn also overrides attacks."
     note for Move "Record fields are private final with public accessors. Captured and promotesTo are optional."
+```

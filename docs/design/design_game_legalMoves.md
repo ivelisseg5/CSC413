@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram 
     autonumber
     actor C as Caller
@@ -64,3 +65,4 @@ sequenceDiagram
     deactivate MG
     G-->>C: legal moves
     deactivate G
+```
