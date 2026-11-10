@@ -53,6 +53,14 @@ public class Game {
         return sideToMove;
     }
 
+    public GameStatus status(){
+        return MoveGenerator.status(board, sideToMove);
+    }
+
+    public boolean isGameOver(){
+        return status().isGameOver();
+    }
+
     /**
      * The moves played so far, oldest first.
      *

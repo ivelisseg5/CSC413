@@ -73,6 +73,17 @@ public final class MoveGenerator {
         return false;
     }
 
+    public static GameStatus status(Board board, Color sideToMove){
+        boolean inCheck = isInCheck(board, sideToMove);
+        boolean hasMove = !legalMoves(board, sideToMove).isEmpty();
+
+        if(hasMove){
+            return inCheck ? GameStatus.CHECK : GameStatus.IN_PROGRESS;
+        }
+
+        return inCheck ? GameStatus.CHECKMATE : GameStatus.STALEMATE;
+    }
+
     /**
      * Every geometrically possible move for {@code color}, king safety aside.
      *
